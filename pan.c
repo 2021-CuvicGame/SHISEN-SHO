@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void main()
+void pan_set()
 {
 	int i,j;
 	char array[6][6];
@@ -18,6 +18,6 @@ void main()
 		array[i][5] = 0;
 	}
 
-	//·£´ýÀ¸·Î position_array¿¡¼­ a~f ¹®ÀÚ¸¦ ¼¯À½(if array==1ÀÎ °÷¿¡¼­)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ position_arrayï¿½ï¿½ï¿½ï¿½ a~f ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½(if array==1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
 }

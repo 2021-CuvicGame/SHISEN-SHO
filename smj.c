@@ -1,14 +1,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-#include<windows.h>
-#include<conio.h>
+// #include<windows.h>
+// #include<conio.h>
+#include "pan.c"
+#include "play.c"
+#include "playa.c"
 
-void arrange(char *array);     //ÆÇ ¹è¿­
-void shuffle(int* arr, int num);     //¼¯±â
-void ch_green();      //±ÛÀÚ »ö±ò
-void gotoxy(int x, int y);  //ÁÂÇ¥
-void wasd(int *cur,char *array);    //¹æÇâÅ°
+void arrange(char *array);     //ï¿½ï¿½ ï¿½è¿­
+void shuffle(int* arr, int num);     //ï¿½ï¿½ï¿½ï¿½
+void ch_green();      //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+void gotoxy(int x, int y);  //ï¿½ï¿½Ç¥
+void wasd(int *cur,char *array);    //ï¿½ï¿½ï¿½ï¿½Å°
 int position_array[4][4] = { {0,1,2,3},{4,5,6,7},{8,9,10,11},{12,13,14,15} };
 
 
@@ -27,6 +30,11 @@ int main() {
         }        
     }
     
+
+    //ìƒí•œë‹˜
+    pan_set();
+    play_set();
+    playa_set();
 }
 
 
@@ -53,13 +61,13 @@ void shuffle(int* arr, int num) {
         arr[rn] = temp;
     }
 }
-void ch_green() {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),10);
-}
-void gotoxy(int x, int y) {
-    COORD Pos = { x - 1, y - 1 };
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
-}
+// void ch_green() {
+//     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),10);
+// }
+// void gotoxy(int x, int y) {
+//     COORD Pos = { x - 1, y - 1 };
+//     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
+// }
 void wasd(int* cur, char *array) {
     int x = 11;
     int y = 7;
@@ -70,25 +78,25 @@ void wasd(int* cur, char *array) {
         chr = _getch();
         if (chr == 0 || chr == 0xe0) {
             chr = _getch();
-            if (chr == 72) { //»ó             
+            if (chr == 72) { //ï¿½ï¿½             
                 y -= 2;
                 cur -= 4;
                 if (y < 7)
                     y = 7;                
                 
             }
-            else if (chr == 80) { //ÇÏ
+            else if (chr == 80) { //ï¿½ï¿½
                 y+=2;
                 cur += 4;
             }
-            else if (chr == 75) { //ÁÂ
+            else if (chr == 75) { //ï¿½ï¿½
                 x -= 6;
                 cur -= 1;
                 if (x <2)
                     x = 2;               
                 
             }
-            else if (chr == 77) { //¿ì
+            else if (chr == 77) { //ï¿½ï¿½
                 x+=6;
                 cur += 1;
             }
