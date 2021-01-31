@@ -1,13 +1,13 @@
 #include <stdio.h>
 
-int ipan2(int b, int d, int array[6][6], int i)
+int ipan2(int b, int d, int array_zo[6][6], int i)
 {
 	int gout = 0;
 	int isave;
 
 	while (d <= b)
 	{
-		if (array[i][d] == 0)
+		if (array_zo[i][d] == 0)
 		{
 			isave = i;
 			gout = 1;
@@ -26,8 +26,7 @@ void playa_set()
 {
 	int b, d;
 	int i, j;
-	int array[6][6];
-	char position_array[6][6];
+	int array_zo[6][6];
 	int k;
 	int panjeong = 0;
 	int last;
@@ -49,8 +48,8 @@ void playa_set()
 
 		for (k = d; k <= b; k++)
 		{
-			if (ipan2(b, d, array[6][6], i) != 100)
-				if (array[ipan2(b, d, array[6][6], i)][k] == 0) //ipan2(b,d,array[6][6],0) 의 결과물 isave
+			if (ipan2(b, d, array_zo[6][6], i) != 100)
+				if (array_zo[ipan2(b, d, array_zo[6][6], i)][k] == 0) //ipan2(b,d,array[6][6],0) 의 결과물 isave
 					panjeong++;
 		}
 
@@ -60,7 +59,7 @@ void playa_set()
 		{
 			for (j = aaa; j < aa; j++)
 			{
-				if (array[j][b] == 0)
+				if (array_zo[j][b] == 0)
 					last++;
 			}
 			if (last == aa - aaa)
@@ -70,7 +69,7 @@ void playa_set()
 
 			for (j = ccc; j < cc; j++)
 			{
-				if (array[j][d] == 0)
+				if (array_zo[j][d] == 0)
 					last++;
 			}
 			if (last == cc - ccc)

@@ -1,13 +1,13 @@
 #include <stdio.h>
 
-int ipan(int a, int c, int array[6][6], int i)
+int ipan(int a, int c, int array_zo[6][6], int i)
 {
 	int gout = 0;
 	int isave;
 
 	while (c <= a)
 	{
-		if (array[c][i] == 0)
+		if (array_zo[c][i] == 0)
 		{
 			isave = i;
 			gout = 1;
@@ -26,8 +26,7 @@ void play_set()
 {
 	int a, c;
 	int i, j;
-	int array[6][6];
-	char position_array[6][6];
+	int array_zo[6][6];
 	int k;
 	int panjeong = 0;
 	int last;
@@ -49,8 +48,8 @@ void play_set()
 
 		for (k = c; k <= a; k++)
 		{
-			if (ipan(a, c, array[6][6], i) != 100)
-				if (array[k][ipan(a, c, array[6][6], i)] == 0) //ipan(a,c,array[6][6],0) 의 결과물 isave
+			if (ipan(a, c, array_zo[6][6], i) != 100)
+				if (array_zo[k][ipan(a, c, array_zo[6][6], i)] == 0) //ipan(a,c,array[6][6],0) 의 결과물 isave
 					panjeong++;
 		}
 
@@ -60,7 +59,7 @@ void play_set()
 		{
 			for (j = bbb; j < bb; j++)
 			{
-				if (array[a][j] == 0)
+				if (array_zo[a][j] == 0)
 					last++;
 			}
 			if (last == bb - bbb)
@@ -70,7 +69,7 @@ void play_set()
 
 			for (j = ddd; j < dd; j++)
 			{
-				if (array[c][j] == 0)
+				if (array_zo[c][j] == 0)
 					last++;
 			}
 			if (last == dd - ddd)
