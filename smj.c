@@ -6,11 +6,10 @@
 #include "play.c"
 #include "playa.c"
 
-void arrange(char* array);     //�� �迭
-void shuffle(int* arr, int num);     //����
-void ch_green();      //���� ����
-void gotoxy(int x, int y);  //��ǥ
-void wasd(int* cur, char* array);    //����Ű
+void arrange(char* array);     //판 배열
+void shuffle(int* arr, int num);     //섞기
+void gotoxy(int x, int y);  //좌표
+void wasd(int* cur, char* array);    //방향키
 int position_array[6][6] = { {0,1,2,3,4,5},{6,7,8,9,10,11},{12,13,14,15,16,17},{18,19,20,21,22,23},{24,25,26,27,28,29},{30,31,32,33,34,35} };
 
 
@@ -73,9 +72,7 @@ void shuffle(int* arr, int num) {
 		arr[rn] = temp;
 	}
 }
-void ch_green() {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-}
+
 void gotoxy(int x, int y) {
 	COORD Pos = { x - 1, y - 1 };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
@@ -90,32 +87,32 @@ void wasd(int* cur, char* array) {
 		chr = _getch();
 		if (chr == 0 || chr == 0xe0) {
 			chr = _getch();
-			if (chr == 72) { //��             
+			if (chr == 72) { ///상             
 				y -= 2;
 				cur -= 4;
 				if (y < 7)
 					y = 7;
 
 			}
-			else if (chr == 80) { //��
+			else if (chr == 80) { //하
 				y += 2;
 				cur += 4;
 			}
-			else if (chr == 75) { //��
+			else if (chr == 75) { //좌
 				x -= 6;
 				cur -= 1;
 				if (x < 2)
 					x = 2;
 
 			}
-			else if (chr == 77) { //��
+			else if (chr == 77) { //우
 				x += 6;
 				cur += 1;
 			}
-			int pos = position_array[*cur];
+			/*int pos = position_array[*cur];*/
 			gotoxy(x, y);
-			ch_green();
-			printf("%c", array[pos]);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+			printf("%c", array[position_array[*cur]]);
 		}
 
 	}

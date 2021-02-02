@@ -3,18 +3,18 @@
 #include<time.h>
 #include<windows.h>
 #include<conio.h>
+#include<time.h>
 
-void arrange(char* array);
-void shuffle(int* arr, int num);
-void ch_green();
+void make_board(char* array);
+void shuffle(char* arr, int num1, int num2);
 void gotoxy(int x, int y);
-void wasd(int* cur, char* array);
+void wasd(int cur, char* array,int x,int y);
 int position_array[6][6] = { {0,1,2,3,4,5},{6,7,8,9,10,11},{12,13,14,15,16,17},{18,19,20,21,22,23},{24,25,26,27,28,29},{30,31,32,33,34,35} };
-
+void game_rule();
 
 int main() {
+	game_rule();
 	int i, j;
-	int level = 4;
 	char array[36] = { ' ',' ',' ',' ',' ',' ',' ','a','a','b','b',' ',' ','c','c','d','d',' ',' ','e','e','f','f',' ',' ','g','g','h','h',' ',' ',' ',' ',' ',' ',' ' };
 	int array_zo[6][6];
 
@@ -29,43 +29,55 @@ int main() {
 		array_zo[5][i] = 0;
 		array_zo[i][5] = 0;
 	}
-
-
-	printf("\n                Sacheonseong Game\n\n");
-	printf("                                          level : %d\n\n", level);
-	arrange(array);
-	int cursor = 0;
 	while (1) {
-		if (_kbhit()) {
-			wasd(cursor, array);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 27);
+		printf("\n                Sacheonseong Game                  \n\n");
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+		int level = 1;
+		printf("                                          level : %d\n\n", level);
+		make_board(array);
+
+		time_t start, fin;
+			srand((unsigned)time(NULL));
+			start = clock();
+			int cursor = 0;
+			int x = 11;
+			int y = 7;
+			while (1) {
+				gotoxy(x, y);
+				if (_kbhit()) {
+					wasd(cursor, array, x, y);
+				}
+			}
+			//do {
+				//fin = clock;
+				
+			//} while (difftime(start, fin) > 60000);
 		}
 	}
-}
 
 	//상한님
 //	pan_set();
 //	play_set();
 //	playa_set();
 
-void arrange(char* array) {
-
-	int x = 0;
-	shuffle(*position_array, 36);
-
-
+void make_board(char* array) {
+	shuffle(*position_array, 4+2, 4+2);
+	
 	for (int i = 1; i < 5; i++) {
-		gotoxy(7, 4 * i + 7);
+		gotoxy(7, 4 * i + 3);
 		for (int j = 1; j < 5; j++) {
-			printf(" | %2.c  | ", array[position_array[i][j]]);
+			printf(" | %2.c  | ", array[4*i+j]);
 		}
 		printf("\n\n");
 	}
 }
-void shuffle(int* arr, int num) {
+void shuffle(char* arr, int num1, int num2) {
 	srand(time(NULL));
 	int temp;
 	int rn;
-	for (int i = 6; i < num - 6; i++) {
+	int bnum = num1 * num2;
+	for (int i = 6; i < 36 - 6; i++) {
 		rn = rand() % 36;
 		if (i % 6 != 0 && i % 6 != 5)
 		{
@@ -78,52 +90,64 @@ void shuffle(int* arr, int num) {
 		}
 	}
 }
-void ch_green() {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-}
+
+	
 void gotoxy(int x, int y) {
 	COORD Pos = { x - 1, y - 1 };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
 }
-void wasd(int* cur, char* array) {
-	int x = 11;
-	int y = 7;
-	int chr;
+void wasd(int cur, char* array,int x, int y) {
 
-	gotoxy(x, y);
+	int chr;
 	while (1) {
 		chr = _getch();
-		if (chr == 0 || chr == 0xe0) {
-			chr = _getch();
-			if (chr == 72) {
-				y -= 2;
-				cur -= 4;
-				if (y < 7)
-					y = 7;
-
-			}
-			else if (chr == 80) {
-				y += 2;
-				cur += 4;
-			}
-			else if (chr == 75) {
-				x -= 6;
-				cur -= 1;
-				if (x < 2)
-					x = 2;
-
-			}
-			else if (chr == 77) {
-				x += 6;
-				cur += 1;
-			}
-			int pos = position_array[*cur];
-			gotoxy(x, y);
-			ch_green();
-			printf("%c", array[pos]);
+		if (chr == 72) {	//상
+			y -= 4;
+			cur -= 4;
+			if (y < 7)
+				y = 19;
 		}
-
+		else if (chr == 80) {	//하
+			y += 4;
+			cur += 4;
+			if (y > 19)
+				y = 7;
+		}
+		else if (chr == 75) {		//좌		
+			x -= 9;
+			cur -= 1;
+			if (x < 2)
+				x = 38;
+		}
+		else if (chr == 77) {	//우
+			x += 9;
+			cur += 1;
+			if (x > 38)
+				x = 11;
+		}
+		int pos = position_array[cur];
+		gotoxy(x, y);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+		//printf("%c", array[pos]);
+		printf("_");
 	}
+}
+
+void game_rule() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);	
+	printf("==========사천성 게임 방법===========\n\n\n");
+	printf("* 모든 패를 제거 하면 게임이 종료됩니다.\n\n");
+	printf("  패를 제거할 수 있는 경우는 다음과 같습니다.\n\n");
+	printf("  >>동일한 패 2개가 인접해 있을 때\n\n");
+	printf("  >>동일한 모양의 패 2개 사이에 다른 패가 있을 경우, \n\n");
+	printf("    수평 또는 수직의 직선으로 연결하여 그 선이 구부러지는 횟수가 2회 이내 일 때 \n\n"); 
+	printf("    (즉, 3개 이내의 수직선 또는 수평선의 조합으로 2개의 패를 이을 때) \n\n\n"); 
+	printf("* 방향키로 제어하고, 선택 시 엔터를 누릅니다.\n\n");
+	printf("* 시간 제한이 있습니다.\n\n\n");
+	//printf("* 잘못 선택 시 목숨이 줄어듭니다.\n");
+	system("pause");
+	system("cls");
+	
 }
 
 /*
