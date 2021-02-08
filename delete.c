@@ -22,7 +22,8 @@ int main() {
 	int i, j;
 	char array[36] = { ' ',' ',' ',' ',' ',' ',' ','a','a','b','b',' ',' ','c','c','d','d',' ',' ','e','e','f','f',' ',' ','g','g','h','h',' ',' ',' ',' ',' ',' ',' ' };
 	int array_zo[6][6];
-	int number=0;
+	int number=0;//ì—”í„°í‚¤ í•œë²ˆ ëˆ„ë¥´ë©´ 1ëœë‹¤
+	int *numberPtr = &number;//numberì˜ ì‹¤ì œ ê°’ì„ ë³€ê²½í•˜ê¸° ìœ„í•´ í¬ì¸í„°ë¡œ ì¸ì ì „ë‹¬
 
 	for (j = 0; j < 6; j++)
 		for (i = 0; i < 6; i++)
@@ -53,7 +54,7 @@ int main() {
 		while (1) {
 			gotoxy(x, y);
 			if (_kbhit()) {
-				wasd(cursor, array, x, y, array_zo, array);
+				wasd(cursor, array, x, y, array_zo, array,*numberPtr);
 			}
 		}
 		//do {
@@ -63,7 +64,7 @@ int main() {
 	}
 }
 
-//»óÇÑ´Ô
+//ìƒí•œë‹˜
 //	pan_set();
 //	play_set();
 //	playa_set();
@@ -105,54 +106,60 @@ void gotoxy(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
 }
 
-void wasd(int cur, char* array, int x, int y,int array_zo[6][6]) {
+void wasd(int cur, char* array, int x, int y,int array_zo[6][6],*numberPtr) {
 
 	int chr;
 	int a, b, c, d;
-	int number = 0;
+	//int number = 0;
 	while (1) {
 		chr = _getch();
-		if (chr == 72) {	//»ó
+		if (chr == 72) {	//ìƒ
 			y -= 4;
 			cur -= 4;
 			if (y < 7)
 				y = 19;
 		}
-		else if (chr == 80) {	//ÇÏ
+		else if (chr == 80) {	//í•˜
 			y += 4;
 			cur += 4;
 			if (y > 19)
 				y = 7;
 		}
-		else if (chr == 75) {		//ÁÂ
+		else if (chr == 75) {		//ì¢Œ
 			x -= 9;
 			cur -= 1;
 			if (x < 3)
 				x = 38;
 		}
-		else if (chr == 77) {	//¿ì
+		else if (chr == 77) {	//ìš°
 			x += 9;
 			cur += 1;
 			if (x > 38)
 				x = 11;
 		}
-		else if (chr == 13)
+		else if (chr == 13 && *numberPtr == 0)
 		{
 			a = (x - 11) / 9;
 			b = (y - 7) / 4;
-			number++;
+			*numberPtr++;
 		}
-		else if (chr == 13)
+		else if (chr == 13 && *numberPtr == 1)
 		{
 			c = (x - 11) / 9;
 			d = (y - 7) / 4;
-			number++;
+			*numberPtr = 0;
+			
+			if (a==c && b==d){
+				//ì„ íƒì·¨ì†Œ
+				//break
+			}
+			else{
+				//ë°”ë¡œ ì˜†ì— ë¶™ì–´ìˆëŠ”ì§€ íŒì •
+				play_set(a, b, c, d, array_zo, array);
+				playa_set(a, b, c, d, array_zo, array);
+			}
 		}
-		else if (number >= 2)
-		{
-			play_set(a, b, c, d, array_zo, array);
-			playa_set(a, b, c, d, array_zo, array);
-		}
+		
 		int pos = position_array[cur];
 		gotoxy(x, y);
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
@@ -163,16 +170,16 @@ void wasd(int cur, char* array, int x, int y,int array_zo[6][6]) {
 
 void game_rule() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-	printf("==========»çÃµ¼º °ÔÀÓ ¹æ¹ı===========\n\n\n");
-	printf("* ¸ğµç ÆĞ¸¦ Á¦°Å ÇÏ¸é °ÔÀÓÀÌ Á¾·áµË´Ï´Ù.\n\n");
-	printf("  ÆĞ¸¦ Á¦°ÅÇÒ ¼ö ÀÖ´Â °æ¿ì´Â ´ÙÀ½°ú °°½À´Ï´Ù.\n\n");
-	printf("  >>µ¿ÀÏÇÑ ÆĞ 2°³°¡ ÀÎÁ¢ÇØ ÀÖÀ» ¶§\n\n");
-	printf("  >>µ¿ÀÏÇÑ ¸ğ¾çÀÇ ÆĞ 2°³ »çÀÌ¿¡ ´Ù¸¥ ÆĞ°¡ ÀÖÀ» °æ¿ì, \n\n");
-	printf("    ¼öÆò ¶Ç´Â ¼öÁ÷ÀÇ Á÷¼±À¸·Î ¿¬°áÇÏ¿© ±× ¼±ÀÌ ±¸ºÎ·¯Áö´Â È½¼ö°¡ 2È¸ ÀÌ³» ÀÏ ¶§ \n\n");
-	printf("    (Áï, 3°³ ÀÌ³»ÀÇ ¼öÁ÷¼± ¶Ç´Â ¼öÆò¼±ÀÇ Á¶ÇÕÀ¸·Î 2°³ÀÇ ÆĞ¸¦ ÀÌÀ» ¶§) \n\n\n");
-	printf("* ¹æÇâÅ°·Î Á¦¾îÇÏ°í, ¼±ÅÃ ½Ã ¿£ÅÍ¸¦ ´©¸¨´Ï´Ù.\n\n");
-	printf("* ½Ã°£ Á¦ÇÑÀÌ ÀÖ½À´Ï´Ù.\n\n\n");
-	//printf("* Àß¸ø ¼±ÅÃ ½Ã ¸ñ¼ûÀÌ ÁÙ¾îµì´Ï´Ù.\n");
+	printf("==========ì‚¬ì²œì„± ê²Œì„ ë°©ë²•===========\n\n\n");
+	printf("* ëª¨ë“  íŒ¨ë¥¼ ì œê±° í•˜ë©´ ê²Œì„ì´ ì¢…ë£Œë©ë‹ˆë‹¤.\n\n");
+	printf("  íŒ¨ë¥¼ ì œê±°í•  ìˆ˜ ìˆëŠ” ê²½ìš°ëŠ” ë‹¤ìŒê³¼ ê°™ìŠµë‹ˆë‹¤.\n\n");
+	printf("  >>ë™ì¼í•œ íŒ¨ 2ê°œê°€ ì¸ì ‘í•´ ìˆì„ ë•Œ\n\n");
+	printf("  >>ë™ì¼í•œ ëª¨ì–‘ì˜ íŒ¨ 2ê°œ ì‚¬ì´ì— ë‹¤ë¥¸ íŒ¨ê°€ ìˆì„ ê²½ìš°, \n\n");
+	printf("    ìˆ˜í‰ ë˜ëŠ” ìˆ˜ì§ì˜ ì§ì„ ìœ¼ë¡œ ì—°ê²°í•˜ì—¬ ê·¸ ì„ ì´ êµ¬ë¶€ëŸ¬ì§€ëŠ” íšŸìˆ˜ê°€ 2íšŒ ì´ë‚´ ì¼ ë•Œ \n\n");
+	printf("    (ì¦‰, 3ê°œ ì´ë‚´ì˜ ìˆ˜ì§ì„  ë˜ëŠ” ìˆ˜í‰ì„ ì˜ ì¡°í•©ìœ¼ë¡œ 2ê°œì˜ íŒ¨ë¥¼ ì´ì„ ë•Œ) \n\n\n");
+	printf("* ë°©í–¥í‚¤ë¡œ ì œì–´í•˜ê³ , ì„ íƒ ì‹œ ì—”í„°ë¥¼ ëˆ„ë¦…ë‹ˆë‹¤.\n\n");
+	printf("* ì‹œê°„ ì œí•œì´ ìˆìŠµë‹ˆë‹¤.\n\n\n");
+	//printf("* ì˜ëª» ì„ íƒ ì‹œ ëª©ìˆ¨ì´ ì¤„ì–´ë“­ë‹ˆë‹¤.\n");
 	system("pause");
 	system("cls");
 
@@ -212,11 +219,11 @@ void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 	int del = 0;
 	int temp;
 
-	//¹®ÀÚ°¡ ¾ø´Â Ä­Àº array_zo[x][y]°ªÀÌ 0
-	//array[][]¿¡´Â ¹®ÀÚ ÀúÀå
-	//¾î´À µÎ À§Ä¡ÀÇ ¹®ÀÚ°¡ ¼±ÅÃµÊ(array[m]=[x][y]¿Í array[n]=[w][z]¿¡¼­)
+	//ë¬¸ìê°€ ì—†ëŠ” ì¹¸ì€ array_zo[x][y]ê°’ì´ 0
+	//array[][]ì—ëŠ” ë¬¸ì ì €ì¥
+	//ì–´ëŠ ë‘ ìœ„ì¹˜ì˜ ë¬¸ìê°€ ì„ íƒë¨(array[m]=[x][y]ì™€ array[n]=[w][z]ì—ì„œ)
 
-	//x¿Í w/y¿Í zÀÇ ´ë¼Ò ºñ±³ °á°ú, x>w y>z °¡ µÇ¾ú´Ù°í °¡Á¤(a¿Í b¿¡ ´õ Å«ÂÊÀÇ ¼ö(a=x, b=y)¸¦ ³Ö´Â ÄÚµå »ğÀÔ ÇÊ¿ä)
+	//xì™€ w/yì™€ zì˜ ëŒ€ì†Œ ë¹„êµ ê²°ê³¼, x>w y>z ê°€ ë˜ì—ˆë‹¤ê³  ê°€ì •(aì™€ bì— ë” í°ìª½ì˜ ìˆ˜(a=x, b=y)ë¥¼ ë„£ëŠ” ì½”ë“œ ì‚½ì… í•„ìš”)
 	if (c > a)
 	{
 		temp = a;
@@ -233,11 +240,11 @@ void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 		for (k = c; k <= a; k++)
 		{
 			if (ipan(a, c, array_zo, i) != 100)
-				if (array_zo[k][ipan(a, c, array_zo, i)] == 0) //ipan(a,c,array[6][6],0) ÀÇ °á°ú¹° isave
+				if (array_zo[k][ipan(a, c, array_zo, i)] == 0) //ipan(a,c,array[6][6],0) ì˜ ê²°ê³¼ë¬¼ isave
 					panjeong++;
 		}
 
-		//i, b, dÀÇ ´ë¼Ò¸¦ ºñ±³ÇÏ¿© i¿Í a Áß Å« ÂÊÀ» bb ÀÛÀº ÂÊÀ» bbb, i¿Í c Áß Å« ÂÊÀ» dd ÀÛÀº ÂÊÀ» ddd
+		//i, b, dì˜ ëŒ€ì†Œë¥¼ ë¹„êµí•˜ì—¬ iì™€ a ì¤‘ í° ìª½ì„ bb ì‘ì€ ìª½ì„ bbb, iì™€ c ì¤‘ í° ìª½ì„ dd ì‘ì€ ìª½ì„ ddd
 		if (i > b)
 		{
 			bb = i;
@@ -283,7 +290,7 @@ void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 
 		if (del == 2)
 		{
-			break; //·çÇÁ¹® Å»Ãâ Àü ¼±ÅÃÇÑ µÎ ¹®ÀÚ¸¦ Áö¿ö¾ß ÇÔ
+			break; //ë£¨í”„ë¬¸ íƒˆì¶œ ì „ ì„ íƒí•œ ë‘ ë¬¸ìë¥¼ ì§€ì›Œì•¼ í•¨
 		}
 	}
 }
@@ -321,11 +328,11 @@ void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 	int del = 0;
 	int temp;
 
-	//¹®ÀÚ°¡ ¾ø´Â Ä­Àº array_zo[x][y]°ªÀÌ 0
-	//array[][]¿¡´Â ¹®ÀÚ ÀúÀå
-	//¾î´À µÎ À§Ä¡ÀÇ ¹®ÀÚ°¡ ¼±ÅÃµÊ(array[m]=[x][y]¿Í array[n]=[w][z]¿¡¼­)
+	//ë¬¸ìê°€ ì—†ëŠ” ì¹¸ì€ array_zo[x][y]ê°’ì´ 0
+	//array[][]ì—ëŠ” ë¬¸ì ì €ì¥
+	//ì–´ëŠ ë‘ ìœ„ì¹˜ì˜ ë¬¸ìê°€ ì„ íƒë¨(array[m]=[x][y]ì™€ array[n]=[w][z]ì—ì„œ)
 
-	//x¿Í w/y¿Í zÀÇ ´ë¼Ò ºñ±³ °á°ú, x>w y>z °¡ µÇ¾ú´Ù°í °¡Á¤(a¿Í b¿¡ ´õ Å«ÂÊÀÇ ¼ö(a=x, b=y)¸¦ ³Ö´Â ÄÚµå »ğÀÔ ÇÊ¿ä)
+	//xì™€ w/yì™€ zì˜ ëŒ€ì†Œ ë¹„êµ ê²°ê³¼, x>w y>z ê°€ ë˜ì—ˆë‹¤ê³  ê°€ì •(aì™€ bì— ë” í°ìª½ì˜ ìˆ˜(a=x, b=y)ë¥¼ ë„£ëŠ” ì½”ë“œ ì‚½ì… í•„ìš”)
 	if (d > b)
 	{
 		temp = b;
@@ -342,11 +349,11 @@ void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 		for (k = d; k <= b; k++)
 		{
 			if (ipan2(b, d, array_zo, i) != 100)
-				if (array_zo[ipan2(b, d, array_zo, i)][k] == 0) //ipan2(b,d,array[6][6],0) ÀÇ °á°ú¹° isave
+				if (array_zo[ipan2(b, d, array_zo, i)][k] == 0) //ipan2(b,d,array[6][6],0) ì˜ ê²°ê³¼ë¬¼ isave
 					panjeong++;
 		}
 
-		//i, b, dÀÇ ´ë¼Ò¸¦ ºñ±³ÇÏ¿© i¿Í b Áß Å« ÂÊÀ» bb ÀÛÀº ÂÊÀ» bbb, i¿Í d Áß Å« ÂÊÀ» dd ÀÛÀº ÂÊÀ» ddd
+		//i, b, dì˜ ëŒ€ì†Œë¥¼ ë¹„êµí•˜ì—¬ iì™€ b ì¤‘ í° ìª½ì„ bb ì‘ì€ ìª½ì„ bbb, iì™€ d ì¤‘ í° ìª½ì„ dd ì‘ì€ ìª½ì„ ddd
 		if (i > a)
 		{
 			bb = i;
@@ -392,7 +399,7 @@ void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 
 		if (del == 2)
 		{
-			break; //·çÇÁ¹® Å»Ãâ Àü ¼±ÅÃÇÑ µÎ ¹®ÀÚ¸¦ Áö¿ö¾ß ÇÔ
+			break; //ë£¨í”„ë¬¸ íƒˆì¶œ ì „ ì„ íƒí•œ ë‘ ë¬¸ìë¥¼ ì§€ì›Œì•¼ í•¨
 		}
 	}
 }
