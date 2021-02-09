@@ -152,9 +152,16 @@ void wasd(int cur, char* array, int x, int y,int array_zo[6][6],int *numberPtr,c
 				//break
 			}
 			else{
+<<<<<<< HEAD:scs1.c
 				//바로 옆에 붙어있는지 판정
 				play_set(a, b, c, d, array_zo, array,select);
 				playa_set(a, b, c, d, array_zo, array,select);
+=======
+				//바로 옆에 붙어있는지 판정 --> playb_set
+				play_set(a, b, c, d, array_zo, array);
+				playa_set(a, b, c, d, array_zo, array);
+				playb_set(a, b, c, d, array_zo, array);
+>>>>>>> d1f7baaa5187cb20a3e9fa4e0a64b4981261fde2:delete.c
 			}
 		}
 		gotoxy(x, y);
@@ -403,9 +410,23 @@ void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[16],int sel
 	}
 }
 
+<<<<<<< HEAD:scs1.c
 void print_life(int life) {
 	gotoxy(7, 25);
 	for (int k = 0; k < life; k++) {
 		printf("★");
 	}
 }
+=======
+void playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[36])
+{
+	if (a - 1 == b || b - 1 == a)
+	{
+		break; //선택한 두 문자를 지워야 함
+	}
+	if (c - 1 == d || d - 1 == c)
+	{
+		break; //선택한 두 문자를 지워야 함
+	}
+}
+>>>>>>> d1f7baaa5187cb20a3e9fa4e0a64b4981261fde2:delete.c
