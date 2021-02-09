@@ -9,21 +9,26 @@
 //a=x*6+y
 
 void make_board(char* array);
-void shuffle(int* arr, int num1, int num2);
+void shuffle(char* arr, int num);
 void gotoxy(int x, int y);
-void wasd(int cur, char* array, int x, int y, int array_zo);
+void wasd(int cur, char* array, int x, int y, int array_zo, int* numberPtr, char select[2]);
 int position_array[6][6] = { {0,1,2,3,4,5},{6,7,8,9,10,11},{12,13,14,15,16,17},{18,19,20,21,22,23},{24,25,26,27,28,29},{30,31,32,33,34,35} };
 void game_rule();
-void play_set(int a, int b, int c, int d, int array_zo, char array);
-void playa_set(int a, int b, int c, int d, int array_zo, char array);
+void play_set(int a, int b, int c, int d, int array_zo, char array, int select[2]);
+void playa_set(int a, int b, int c, int d, int array_zo, char array, int select[2]);
+void print_life(int life);
 
 int main() {
 	game_rule();
 	int i, j;
-	char array[36] = { ' ',' ',' ',' ',' ',' ',' ','a','a','b','b',' ',' ','c','c','d','d',' ',' ','e','e','f','f',' ',' ','g','g','h','h',' ',' ',' ',' ',' ',' ',' ' };
+	char array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h', };
+	shuffle(array, 16);
 	int array_zo[6][6];
 	int number=0;//엔터키 한번 누르면 1된다
 	int *numberPtr = &number;//number의 실제 값을 변경하기 위해 포인터로 인자 전달
+	int life = 5;	//목숨
+	int level = 1;	
+	int select[2];		// 선택한 array 요소(?) 저장
 
 	for (j = 0; j < 6; j++)
 		for (i = 0; i < 6; i++)
@@ -41,9 +46,9 @@ int main() {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 27);
 		printf("\n                Sacheonseong Game                  \n\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-		int level = 1;
 		printf("                                          level : %d\n\n", level);
 		make_board(array);
+		print_life(life);
 
 		time_t start, fin;
 		srand((unsigned)time(NULL));
@@ -54,7 +59,7 @@ int main() {
 		while (1) {
 			gotoxy(x, y);
 			if (_kbhit()) {
-				wasd(cursor, array, x, y, array_zo, array,*numberPtr);
+				wasd(cursor, array, x, y, array_zo,*numberPtr,select);
 			}
 		}
 		//do {
@@ -64,40 +69,27 @@ int main() {
 	}
 }
 
-//상한님
-//	pan_set();
-//	play_set();
-//	playa_set();
-
 void make_board(char* array) {
 
 	int x = 0;
-	shuffle(*position_array, 4 + 2, 4 + 2);
 
-	for (int i = 1; i < 5; i++) {
-		gotoxy(7, 4 * i + 3);
-		for (int j = 1; j < 5; j++) {
-			printf(" | %2.c  | ", array[position_array[j][i]]);
+	for (int i = 0; i < 16; i++) {
+		if (i % 4 == 0) {
+			gotoxy(7, i + 7);
 		}
-		printf("\n\n");
+		printf(" |  %c  | ", array[i]);
 	}
 }
-void shuffle(int* arr, int num1, int num2) {
+
+void shuffle(char* arr, int num) {
 	srand(time(NULL));
-	int temp;
+	char temp;
 	int rn;
-	int bnum = num1 * num2;
-	for (int i = 6; i < bnum - 6; i++) {
-		rn = rand() % 36;
-		if (i % 6 != 0 && i % 6 != 5)
-		{
-			if (rn >= 6 && rn <= 30 && rn % 6 != 0 && rn % 6 != 5)
-			{
-				temp = arr[i];
-				arr[i] = arr[rn];
-				arr[rn] = temp;
-			}
-		}
+	for (int i = 0; i < num - 1; i++) {
+		rn = rand() % (num - i); // i 부터 num-1 사이에 임의의 정수 생성
+		temp = arr[i];
+		arr[i] = arr[rn];
+		arr[rn] = temp;
 	}
 }
 
@@ -106,7 +98,7 @@ void gotoxy(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
 }
 
-void wasd(int cur, char* array, int x, int y,int array_zo[6][6],*numberPtr) {
+void wasd(int cur, char* array, int x, int y,int array_zo[6][6],int *numberPtr,char select[2]) {
 
 	int chr;
 	int a, b, c, d;
@@ -118,36 +110,42 @@ void wasd(int cur, char* array, int x, int y,int array_zo[6][6],*numberPtr) {
 			cur -= 4;
 			if (y < 7)
 				y = 19;
+				//cur+=12;
 		}
 		else if (chr == 80) {	//하
 			y += 4;
 			cur += 4;
 			if (y > 19)
 				y = 7;
+				//cur-=12;
 		}
 		else if (chr == 75) {		//좌
 			x -= 9;
 			cur -= 1;
 			if (x < 3)
 				x = 38;
+				//cur+=3;
 		}
 		else if (chr == 77) {	//우
 			x += 9;
 			cur += 1;
 			if (x > 38)
 				x = 11;
+				//cur-=3
 		}
 		else if (chr == 13 && *numberPtr == 0)
 		{
 			a = (x - 11) / 9;
 			b = (y - 7) / 4;
 			*numberPtr++;
+			select[0] = cur;
 		}
 		else if (chr == 13 && *numberPtr == 1)
 		{
 			c = (x - 11) / 9;
 			d = (y - 7) / 4;
 			*numberPtr = 0;
+			select[1] = cur;
 			
 			if (a==c && b==d){
 				//선택취소
@@ -155,16 +153,13 @@ void wasd(int cur, char* array, int x, int y,int array_zo[6][6],*numberPtr) {
 			}
 			else{
 				//바로 옆에 붙어있는지 판정
-				play_set(a, b, c, d, array_zo, array);
-				playa_set(a, b, c, d, array_zo, array);
+				play_set(a, b, c, d, array_zo, array,select);
+				playa_set(a, b, c, d, array_zo, array,select);
 			}
 		}
-		
-		int pos = position_array[cur];
 		gotoxy(x, y);
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-		//printf("%c", array[pos]);
-		printf("_");
+		printf("%c", array[cur]);
 	}
 }
 
@@ -179,7 +174,7 @@ void game_rule() {
 	printf("    (즉, 3개 이내의 수직선 또는 수평선의 조합으로 2개의 패를 이을 때) \n\n\n");
 	printf("* 방향키로 제어하고, 선택 시 엔터를 누릅니다.\n\n");
 	printf("* 시간 제한이 있습니다.\n\n\n");
-	//printf("* 잘못 선택 시 목숨이 줄어듭니다.\n");
+	printf("* 잘못 선택 시 목숨이 줄어듭니다. (목숨 5개)\n\n\n");
 	system("pause");
 	system("cls");
 
@@ -206,7 +201,7 @@ int ipan(int a, int c, int array_zo[6][6], int i)
 		return 100;
 }
 
-void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
+void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[16],int select[2])
 {
 //	int a, c;
 	int i, j;
@@ -290,6 +285,8 @@ void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 
 		if (del == 2)
 		{
+			//array[select[0]]="";
+			//array[select[1]]="";
 			break; //루프문 탈출 전 선택한 두 문자를 지워야 함
 		}
 	}
@@ -315,7 +312,7 @@ int ipan2(int b, int d, int array_zo[6][6], int i)
 		return 100;
 }
 
-void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
+void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[16],int select[2])
 {
 //	int b, d;
 	int i, j;
@@ -399,8 +396,16 @@ void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 
 		if (del == 2)
 		{
+			//array[select[0]]="";
+			//array[select[1]]="";
 			break; //루프문 탈출 전 선택한 두 문자를 지워야 함
 		}
 	}
 }
 
+void print_life(int life) {
+	gotoxy(7, 25);
+	for (int k = 0; k < life; k++) {
+		printf("★");
+	}
+}
