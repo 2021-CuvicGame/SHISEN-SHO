@@ -154,9 +154,10 @@ void wasd(int cur, char* array, int x, int y,int array_zo[6][6],*numberPtr) {
 				//break
 			}
 			else{
-				//바로 옆에 붙어있는지 판정
+				//바로 옆에 붙어있는지 판정 --> playb_set
 				play_set(a, b, c, d, array_zo, array);
 				playa_set(a, b, c, d, array_zo, array);
+				playb_set(a, b, c, d, array_zo, array);
 			}
 		}
 		
@@ -404,3 +405,14 @@ void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[36])
 	}
 }
 
+void playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[36])
+{
+	if (a - 1 == b || b - 1 == a)
+	{
+		break; //선택한 두 문자를 지워야 함
+	}
+	if (c - 1 == d || d - 1 == c)
+	{
+		break; //선택한 두 문자를 지워야 함
+	}
+}
