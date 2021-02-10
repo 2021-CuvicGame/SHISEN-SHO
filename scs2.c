@@ -469,12 +469,18 @@ void print_life(int life) {
 
 int playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
 {
-	if (a - 1 == b || b - 1 == a)
+	if (a - 1 == c || c - 1 == a)
 	{
-		return 1; //선택한 두 문자를 지워야 함
+		if (b == d)
+		{
+			return 1; //선택한 두 문자를 지워야 함
+		}
 	}
-	if (c - 1 == d || d - 1 == c)
+	if (b - 1 == d || d - 1 == b)
 	{
-		return 1; //선택한 두 문자를 지워야 함
+		if (a == c)
+		{
+			return 1; //선택한 두 문자를 지워야 함
+		}
 	}
 }
