@@ -11,26 +11,29 @@
 void make_board(char* array);
 void shuffle(char* arr, int num);
 void gotoxy(int x, int y);
-void wasd(int cur, char* array, int x, int y, int array_zo, int* numberPtr, char select[2]);
+void wasd(char* array, int array_zo);
 int position_array[6][6] = { {0,1,2,3,4,5},{6,7,8,9,10,11},{12,13,14,15,16,17},{18,19,20,21,22,23},{24,25,26,27,28,29},{30,31,32,33,34,35} };
 void game_rule();
-void play_set(int a, int b, int c, int d, int array_zo, char array, int select[2]);
-void playa_set(int a, int b, int c, int d, int array_zo, char array, int select[2]);
-//void playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16]);
+int play_set(int a, int b, int c, int d, int array_zo, char array);
+int playa_set(int a, int b, int c, int d, int array_zo, char array);
+int playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16]);
 void print_life(int life);
+int x, y, cursor,number;
+int selected[2] = { 0,0 };		// 선택한 array 요소(?) 저장
+int a = 0, b = 0, c = 0, d = 0;
 
 int main() {
 	game_rule();
 	int i, j;
-	char array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h', };
+	char array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
 	shuffle(array, 16);
 	int array_zo[6][6];
-	int number=0;//엔터키 한번 누르면 1된다
-	int *numberPtr = &number;//number의 실제 값을 변경하기 위해 포인터로 인자 전달
+	number = 0;//엔터키 한번 누르면 1된다
+	//int* numberPtr = &number;//number의 실제 값을 변경하기 위해 포인터로 인자 전달
 	int life = 5;	//목숨
-	int level = 1;	
+	int level = 1;
 	int sec = 1000;
-	int select[2];		// 선택한 array 요소(?) 저장
+	
 
 	for (j = 0; j < 6; j++)
 		for (i = 0; i < 6; i++)
@@ -44,7 +47,7 @@ int main() {
 		array_zo[i][5] = 0;
 	}
 
-	while (1) {
+	//while (1) {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 27);
 		printf("\n                Sacheonseong Game                  \n\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
@@ -55,24 +58,31 @@ int main() {
 		time_t start, fin;
 		srand((unsigned)time(NULL));
 		start = clock();
-		int cursor = 0;
-		int x = 11;
-		int y = 7;
-		gotoxy(x, y);	//초기 좌표
+		cursor = 0;
+		x = 11;
+		y = 7;
+		gotoxy(x+1, y);	//초기 좌표
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+		printf("\b%c", array[cursor]);
 		while (1) {
+			/*Sleep(10);*/
 			if (_kbhit()) {
-				wasd(cursor, array, x, y, array_zo,*numberPtr,select);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+				printf("\b%c", array[cursor]);
+				wasd(array, array_zo);
 			}
-			/*Sleep(10);
+			//Sleep(10);
 
-			if (sec % 100 == 0)
+			/*else if (sec % 100 == 0)
 			{
 				if (sec / 100 < 0)
 				{
+					gotoxy(30, 30);
 					printf("게임 끝. ");
 					break;
 				}
-				printf("%d\n", sec / 100);
+				gotoxy(30, 30);
+				printf("%d\n", sec / 1000);
 			}
 
 			sec--;*/
@@ -81,7 +91,7 @@ int main() {
 			//fin = clock;
 
 		//} while (difftime(start, fin) > 60000);
-	}
+	//}
 }
 
 void make_board(char* array) {
@@ -111,84 +121,100 @@ void gotoxy(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
 }
 
-void wasd(int cur, char* array, int x, int y,int array_zo[6][6],int *numberPtr,char select[2]) {
+void wasd(char* array, int array_zo[6][6]) {
 
 	int chr;
-	int a=0, b=0, c=0, d=0;
+	
 	//int number = 0;
+	
+
 	//while (1) {
-		chr = _getch();
-		if (chr == 72) {	//상
-			y -= 4;
-			cur -= 4;
-			if (y < 7)
-			{
-				y = 19;
-				cur += 12;
-			}
-		}
-		else if (chr == 80) {	//하
-			y += 4;
-			cur += 4;
-			if (y > 19)
-			{
-				y = 7;
-				cur -= 12;
-			}
-		}
-		else if (chr == 75) {		//좌
-			x -= 9;
-			cur -= 1;
-			if (x < 3)
-			{
-				x = 38;
-				cur += 3;
-			}
-		}
-		else if (chr == 77) {	//우
-			x += 9;
-			cur += 1;
-			if (x > 38) {
-				x = 11;
-				cur -= 3;
-			}
-		}
-		else if (chr == 13 && *numberPtr == 0)
+	chr = _getch();
+	if (chr == 72) {	//상
+		y -= 4;
+		cursor -= 4;
+		if (y < 7)
 		{
-			a = (x - 11) / 9;
-			b = (y - 7) / 4;
-			*numberPtr++;
-			select[0] = cur;
+			y = 19;
+			cursor += 16;
 		}
-		else if (chr == 13 && *numberPtr == 1)
+	}
+	else if (chr == 80) {	//하
+		y += 4;
+		cursor += 4;
+		if (y > 19)
 		{
-			c = (x - 11) / 9;
-			d = (y - 7) / 4;
-			*numberPtr = 0;
-			select[1] = cur;
+			y = 7;
+			cursor -= 16;
+		}
+	}
+	else if (chr == 75) {		//좌
+		x -= 9;
+		cursor -= 1;
+		if (x < 3)
+		{
+			x = 38;
+			cursor += 4;
+		}
+	}
+	else if (chr == 77) {	//우
+		x += 9;
+		cursor += 1;
+		if (x > 38) {
+			x = 11;
+			cursor -= 4;
+		}
+	}
+	else if (chr == 13 && number == 0)
+	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+		printf("*");
+		a = (x - 11) / 9;
+		b = (y - 7) / 4;
+		number++;
+		selected[0] = cursor;
+		
+	}
+	else if (chr == 13 && number == 1)
+	{
+		c = (x - 11) / 9;
+		d = (y - 7) / 4;
+		number = 0;
+		selected[1] = cursor;
+
+		gotoxy(a * 9 + 11 + 1, b * 4 + 7);
+		printf(" ");
+
+		if (a == c && b == d || array[selected[0]] != array[selected[1]]) {
+			//선택취소
 			
-			if (a==c && b==d){
-				//선택취소
-				//array[select[0]]="";
-				//array[select[1]]="";
+			//array[select[0]]="";
+			//array[select[1]]="";
 
-				//break;
-			}
-			else{
-
-				//바로 옆에 붙어있는지 판정--> playb_set
-				play_set(a, b, c, d, array_zo, array,select);
-				playa_set(a, b, c, d, array_zo, array,select);
-				//playb_set(a, b, c, d, array_zo, array);
-
-			}
+			//break;
 		}
-		gotoxy(x, y);
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-		printf("%c", array[cur]);
-		//system("cls");
-		//make_board(array);
-	//}
+		else {
+
+			//바로 옆에 붙어있는지 판정--> playb_set
+			if (play_set(a, b, c, d, array_zo, array) == 1 || playa_set(a, b, c, d, array_zo, array)==1 || playb_set(a, b, c, d, array_zo, array)==1) {
+				array[selected[0]]=32;
+				array[selected[1]]=32;
+				gotoxy(a * 9 + 11, b * 4 + 7);
+				printf("\b\b\b\b        ");
+				gotoxy(c * 9 + 11, d * 4 + 7);
+				printf("\b\b\b\b        ");
+			}
+			//playb_set(a, b, c, d, array_zo, array);
+
+		}
+	}
+	
+	gotoxy(x, y);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	printf("%c", array[cursor]);
+	//system("cls");
+	//make_board(array);
+//}
 }
 
 void game_rule() {
@@ -229,11 +255,11 @@ int ipan(int a, int c, int array_zo[6][6], int i)
 		return 100;
 }
 
-void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[16],int select[2])
+int play_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
 {
-//	int a, c;
+	//	int a, c;
 	int i, j;
-//	int array_zo[6][6];
+	//	int array_zo[6][6];
 	int k;
 	int panjeong = 0;
 	int last;
@@ -313,9 +339,10 @@ void play_set(int a,int b,int c,int d,int array_zo[6][6],char array[16],int sele
 
 		if (del == 2)
 		{
+			return 1;
 			//array[select[0]]="";
 			//array[select[1]]="";
-			break; //루프문 탈출 전 선택한 두 문자를 지워야 함
+			//break; //루프문 탈출 전 선택한 두 문자를 지워야 함
 		}
 	}
 }
@@ -340,11 +367,11 @@ int ipan2(int b, int d, int array_zo[6][6], int i)
 		return 100;
 }
 
-void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[16],int select[2])
+int playa_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
 {
-//	int b, d;
+	//	int b, d;
 	int i, j;
-//	int array_zo[6][6];
+	//	int array_zo[6][6];
 	int k;
 	int panjeong = 0;
 	int last;
@@ -424,9 +451,10 @@ void playa_set(int a,int b,int c,int d,int array_zo[6][6],char array[16],int sel
 
 		if (del == 2)
 		{
+			return 1;
 			//array[select[0]]="";
 			//array[select[1]]="";
-			break; //루프문 탈출 전 선택한 두 문자를 지워야 함
+			//break; //루프문 탈출 전 선택한 두 문자를 지워야 함
 		}
 	}
 }
@@ -439,15 +467,14 @@ void print_life(int life) {
 	}
 }
 
-//void playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
-//{
-//	if (a - 1 == b || b - 1 == a)
-//	{
-//		break; //선택한 두 문자를 지워야 함
-//	}
-//	if (c - 1 == d || d - 1 == c)
-//	{
-//		break; //선택한 두 문자를 지워야 함
-//	}
-//}
-
+int playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
+{
+	if (a - 1 == b || b - 1 == a)
+	{
+		return 1; //선택한 두 문자를 지워야 함
+	}
+	if (c - 1 == d || d - 1 == c)
+	{
+		return 1; //선택한 두 문자를 지워야 함
+	}
+}
