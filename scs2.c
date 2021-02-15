@@ -18,20 +18,30 @@ int play_set(int a, int b, int c, int d, int array_zo, char array);
 int playa_set(int a, int b, int c, int d, int array_zo, char array);
 int playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16]);
 void print_life(int life);
+void game_set();
 int x, y, cursor,number;
 int selected[2] = { 0,0 };		// 선택한 array 요소(?) 저장
 int a = 0, b = 0, c = 0, d = 0;
+int correct = 0;
+int level = 1;
+char array[16] = { '1','2','3','4','5','6','7','8','1','2','3','4','5','6','7','8' };
 
 int main() {
 	game_rule();
+
+	game_set();
+	
+}
+
+void game_set(){
 	int i, j;
-	char array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
+	// char array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
 	shuffle(array, 16);
 	int array_zo[6][6];
 	number = 0;//엔터키 한번 누르면 1된다
 	//int* numberPtr = &number;//number의 실제 값을 변경하기 위해 포인터로 인자 전달
 	int life = 5;	//목숨
-	int level = 1;
+	
 	int sec = 1000;
 	
 
@@ -93,7 +103,6 @@ int main() {
 		//} while (difftime(start, fin) > 60000);
 	//}
 }
-
 void make_board(char* array) {
 
 	for (int i = 0; i < 16; i++) {
@@ -175,6 +184,7 @@ void wasd(char* array, int array_zo[6][6]) {
 		selected[0] = cursor;
 		
 	}
+	//Enter 두번째
 	else if (chr == 13 && number == 1)
 	{
 		c = (x - 11) / 9;
@@ -203,9 +213,32 @@ void wasd(char* array, int array_zo[6][6]) {
 				printf("\b\b\b\b        ");
 				gotoxy(c * 9 + 11, d * 4 + 7);
 				printf("\b\b\b\b        ");
+				
+				correct ++;
 			}
 			//playb_set(a, b, c, d, array_zo, array);
 
+		}
+
+		//if array[] 다 공백 (32)이면 게임클리어 출력 -> 레벨 다음 -> array 말 종류가 바뀐다
+		if (correct == 8){
+			level++;
+			if (level==2){
+				array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
+			}
+			else if (level==3){
+				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
+			}
+			else if (level==4){
+				//한글
+				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
+			}
+			else if (level==4){
+				//한문
+				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
+			}
+			//systemcls
+			game_set();
 		}
 	}
 	
