@@ -17,33 +17,23 @@ void game_rule();
 int play_set(int a, int b, int c, int d, int array_zo, char array);
 int playa_set(int a, int b, int c, int d, int array_zo, char array);
 int playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16]);
-void print_life(int life);
-void game_set();
-int x, y, cursor,number;
+void print_life();
+int x, y, cursor, number;
 int selected[2] = { 0,0 };		// 선택한 array 요소(?) 저장
 int a = 0, b = 0, c = 0, d = 0;
-int correct = 0;
-int level = 1;
-char array[16] = { '1','2','3','4','5','6','7','8','1','2','3','4','5','6','7','8' };
+int life = 5;
 
 int main() {
 	game_rule();
-
-	game_set();
-	
-}
-
-void game_set(){
 	int i, j;
-	// char array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
+	char array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
 	shuffle(array, 16);
 	int array_zo[6][6];
 	number = 0;//엔터키 한번 누르면 1된다
 	//int* numberPtr = &number;//number의 실제 값을 변경하기 위해 포인터로 인자 전달
-	int life = 5;	//목숨
-	
+	int level = 1;
 	int sec = 1000;
-	
+
 
 	for (j = 0; j < 6; j++)
 		for (i = 0; i < 6; i++)
@@ -58,51 +48,50 @@ void game_set(){
 	}
 
 	//while (1) {
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 27);
-		printf("\n                Sacheonseong Game                  \n\n");
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-		printf("                                          level : %d\n\n", level);
-		make_board(array);
-		print_life(life);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 27);
+	printf("\n                Sacheonseong Game                  \n\n");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	printf("                                          level : %d\n\n", level);
+	make_board(array);
 
-		time_t start, fin;
-		srand((unsigned)time(NULL));
-		start = clock();
-		cursor = 0;
-		x = 11;
-		y = 7;
-		gotoxy(x+1, y);	//초기 좌표
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-		printf("\b%c", array[cursor]);
-		while (1) {
-			/*Sleep(10);*/
-			if (_kbhit()) {
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-				printf("\b%c", array[cursor]);
-				wasd(array, array_zo);
-			}
-			//Sleep(10);
-
-			/*else if (sec % 100 == 0)
-			{
-				if (sec / 100 < 0)
-				{
-					gotoxy(30, 30);
-					printf("게임 끝. ");
-					break;
-				}
-				gotoxy(30, 30);
-				printf("%d\n", sec / 1000);
-			}
-
-			sec--;*/
+	time_t start, fin;
+	srand((unsigned)time(NULL));
+	start = clock();
+	cursor = 0;
+	x = 11;
+	y = 7;
+	gotoxy(x + 1, y);	//초기 좌표
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	printf("\b%c", array[cursor]);
+	while (1) {
+		/*Sleep(10);*/
+		if (_kbhit()) {
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+			printf("\b%c", array[cursor]);
+			wasd(array, array_zo);
 		}
-		//do {
-			//fin = clock;
+		//Sleep(10);
 
-		//} while (difftime(start, fin) > 60000);
-	//}
+		/*else if (sec % 100 == 0)
+		{
+			if (sec / 100 < 0)
+			{
+				gotoxy(30, 30);
+				printf("게임 끝. ");
+				break;
+			}
+			gotoxy(30, 30);
+			printf("%d\n", sec / 1000);
+		}
+		sec--;*/
+	}
+	//do {
+		//fin = clock;
+
+	//} while (difftime(start, fin) > 60000);
+//}
 }
+
 void make_board(char* array) {
 
 	for (int i = 0; i < 16; i++) {
@@ -111,6 +100,7 @@ void make_board(char* array) {
 		}
 		printf(" |  %c  | ", array[i]);
 	}
+	print_life();
 }
 
 void shuffle(char* arr, int num) {
@@ -133,9 +123,9 @@ void gotoxy(int x, int y) {
 void wasd(char* array, int array_zo[6][6]) {
 
 	int chr;
-	
+
 	//int number = 0;
-	
+
 
 	//while (1) {
 	chr = _getch();
@@ -182,9 +172,8 @@ void wasd(char* array, int array_zo[6][6]) {
 		b = (y - 7) / 4;
 		number++;
 		selected[0] = cursor;
-		
+
 	}
-	//Enter 두번째
 	else if (chr == 13 && number == 1)
 	{
 		c = (x - 11) / 9;
@@ -197,51 +186,35 @@ void wasd(char* array, int array_zo[6][6]) {
 
 		if (a == c && b == d || array[selected[0]] != array[selected[1]]) {
 			//선택취소
-			
+
 			//array[select[0]]="";
 			//array[select[1]]="";
 
 			//break;
+			life--;
+			print_life();
 		}
 		else {
 
 			//바로 옆에 붙어있는지 판정--> playb_set
-			if (play_set(a, b, c, d, array_zo, array) == 1 || playa_set(a, b, c, d, array_zo, array)==1 || playb_set(a, b, c, d, array_zo, array)==1) {
-				array[selected[0]]=32;
-				array[selected[1]]=32;
+			if (play_set(a, b, c, d, array_zo, array) == 1 || playa_set(a, b, c, d, array_zo, array) == 1 || playb_set(a, b, c, d, array_zo, array) == 1) {
+				array[selected[0]] = 32;
+				array[selected[1]] = 32;
 				gotoxy(a * 9 + 11, b * 4 + 7);
 				printf("\b\b\b\b        ");
 				gotoxy(c * 9 + 11, d * 4 + 7);
 				printf("\b\b\b\b        ");
-				
-				correct ++;
 			}
-			//playb_set(a, b, c, d, array_zo, array);
 
-		}
+			else
+			{
+				life--;
+				print_life();
+			}
 
-		//if array[] 다 공백 (32)이면 게임클리어 출력 -> 레벨 다음 -> array 말 종류가 바뀐다
-		if (correct == 8){
-			level++;
-			if (level==2){
-				array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
-			}
-			else if (level==3){
-				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
-			}
-			else if (level==4){
-				//한글
-				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
-			}
-			else if (level==4){
-				//한문
-				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
-			}
-			//systemcls
-			game_set();
 		}
 	}
-	
+
 	gotoxy(x, y);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
 	printf("%c", array[cursor]);
@@ -267,6 +240,13 @@ void game_rule() {
 
 }
 
+void print_life() {
+	gotoxy(7, 25);
+	//	for (int k = 0; k < life; k++) {
+	//		printf("*");	//★
+	//	}
+	printf("life: %d", life);
+}
 
 int ipan(int a, int c, int array_zo[6][6], int i)
 {
@@ -377,6 +357,8 @@ int play_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
 			//array[select[1]]="";
 			//break; //루프문 탈출 전 선택한 두 문자를 지워야 함
 		}
+		else
+			return 100;
 	}
 }
 
@@ -489,14 +471,8 @@ int playa_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
 			//array[select[1]]="";
 			//break; //루프문 탈출 전 선택한 두 문자를 지워야 함
 		}
-	}
-}
-
-
-void print_life(int life) {
-	gotoxy(7, 25);
-	for (int k = 0; k < life; k++) {
-		printf("*");	//★
+		else
+			return 100;
 	}
 }
 
@@ -508,6 +484,8 @@ int playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
 		{
 			return 1; //선택한 두 문자를 지워야 함
 		}
+		else
+			return 100;
 	}
 	if (b - 1 == d || d - 1 == b)
 	{
@@ -515,5 +493,7 @@ int playb_set(int a, int b, int c, int d, int array_zo[6][6], char array[16])
 		{
 			return 1; //선택한 두 문자를 지워야 함
 		}
+		else
+			return 100;
 	}
 }
