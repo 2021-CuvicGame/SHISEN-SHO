@@ -3,9 +3,9 @@
 #include "Judge.h"
 
 int gLoop();
-void levCh(int level);		//·¹º§ Ã¼Å© ÇÔ¼ö
+void levCh(int level);		//ë ˆë²¨ ì²´í¬ í•¨ìˆ˜
 void drawMap(int level);
-int selected[2] = { 0,0 };		// ¼±ÅÃÇÑ array ¿ä¼Ò(?) ÀúÀå
+int selected[2] = { 0,0 };		// ì„ íƒí•œ array ìš”ì†Œ(?) ì €ì¥
 
 int move(int* array_zo, int* x, int* y, int* correct);
 
@@ -14,12 +14,12 @@ int main() {
 	while (1) {
 		title();
 		int menuCh = menu();
-		if (menuCh == 0) {	//°ÔÀÔ Á¾·á
+		if (menuCh == 0) {	//ê²Œì… ì¢…ë£Œ
 			return 0;
 		}
-		else if (menuCh == 1) {		//°ÔÀÓ ½ÃÀÛ
-			while(1) {
-				int status = gLoop();	//°ÔÀÓ ½ÇÇà >>0ÀÌ¸é Á¾·á, 1ÀÌ¸é ·¹º§¾÷ or clear
+		else if (menuCh == 1) {		//ê²Œì„ ì‹œì‘
+			while (1) {
+				int status = gLoop();	//ê²Œì„ ì‹¤í–‰ >>0ì´ë©´ ì¢…ë£Œ, 1ì´ë©´ ë ˆë²¨ì—… or clear
 				if (status == CLEAR) {
 					if (level < 4) {
 						levCh(++level);
@@ -35,11 +35,11 @@ int main() {
 				if (status == END)	//life==0 -> end
 					game_over();
 				if (status == MAIN) {
-					break;	//¸ŞÀÎÈ­¸éÀ¸·Î ³Ñ¾î°¨		quit -> main
+					break;	//ë©”ì¸í™”ë©´ìœ¼ë¡œ ë„˜ì–´ê°		quit -> main
 				}
 			}
 		}
-		else if (menuCh == 2) {		//°ÔÀÓ ¹æ¹ı
+		else if (menuCh == 2) {		//ê²Œì„ ë°©ë²•
 			game_rule();
 		}
 		system("cls");
@@ -48,28 +48,28 @@ int main() {
 }
 
 int gLoop() {
-	int correct=0;	
-	int array_zo[6][6];		//array_zo ¼±¾ğ	//Àü¿ª...?
+	int correct = 0;
+	int array_zo[6][6];		//array_zo ì„ ì–¸	//ì „ì—­...?
 	for (int j = 0; j < 6; j++)
 		for (int i = 0; i < 6; i++)
 			array_zo[i][j] = 1;
-	for (int i = 0; i < 6; i++){
+	for (int i = 0; i < 6; i++) {
 		array_zo[0][i] = 0;
 		array_zo[i][0] = 0;
 		array_zo[5][i] = 0;
 		array_zo[i][5] = 0;
 	}
 	shuffle(array);
-	drawMap(level);		//¸Ê Ãâ·Â
+	drawMap(level);		//ë§µ ì¶œë ¥
 	cursor = 0;
-	setcolor(10, 0);	//ÃÊ±â Ä¿¼­ À§Ä¡¿¡¼­ Ãâ·Â
-	int x = 11, y = 7;	
-	gotoxy(x+1 , y);
+	setcolor(10, 0);	//ì´ˆê¸° ì»¤ì„œ ìœ„ì¹˜ì—ì„œ ì¶œë ¥
+	int x = 11, y = 7;
+	gotoxy(x + 1, y);
 	printf("\b%c", array[cursor]);
-	while (1) {	//°ÔÀÓ ·çÇÁ
+	while (1) {	//ê²Œì„ ë£¨í”„
 		if (_kbhit()) {
-			int ans=move(array_zo, &x, &y, &correct);
-			if (correct == 8)		//correct==1·Î ÇÏ¸é ·¹º§ ¾÷ ÇÏ´Â °Í È®ÀÎ °¡´É
+			int ans = move(array_zo, &x, &y, &correct);
+			if (correct == 8)		//correct==1ë¡œ í•˜ë©´ ë ˆë²¨ ì—… í•˜ëŠ” ê²ƒ í™•ì¸ ê°€ëŠ¥
 				return CLEAR;
 			if (life == 0)
 				return END;
@@ -82,8 +82,8 @@ int gLoop() {
 		}
 	}
 }
-int move(int* array_zo,int *x,int*y,int *correct) {	
-	setcolor(7, 0);		//ÀÌµ¿ Àü Èò»öÀ¸·Î Ãâ·Â
+int move(int* array_zo, int* x, int* y, int* correct) {
+	setcolor(7, 0);		//ì´ë™ ì „ í°ìƒ‰ìœ¼ë¡œ ì¶œë ¥
 	printf("\b%c", array[cursor]);
 	int key = keyControl();
 	if (key == UP) {
@@ -118,13 +118,13 @@ int move(int* array_zo,int *x,int*y,int *correct) {
 			cursor -= 4;
 		}
 	}
-	else if (key ==RESET) {
+	else if (key == RESET) {
 		return RESET;
 	}
 	else if (key == QUIT) {
 		return QUIT;
 	}
-	//Enter Ã¹ ¹øÂ°
+	//Enter ì²« ë²ˆì§¸
 	else if (key == ENTER && number == 0) {
 		setcolor(4, 0);
 		printf("*");
@@ -133,7 +133,7 @@ int move(int* array_zo,int *x,int*y,int *correct) {
 		number++;
 		selected[0] = cursor;
 	}
-	//Enter µÎ ¹øÂ°
+	//Enter ë‘ ë²ˆì§¸
 	else if (key == ENTER && number == 1)
 	{
 		c = (*x - 11) / 9;
@@ -144,11 +144,12 @@ int move(int* array_zo,int *x,int*y,int *correct) {
 		gotoxy(a * 9 + 11 + 1, b * 4 + 7);
 		printf(" ");
 
-		if (a == c && b == d || array[selected[0]] != array[selected[1]]) {		//°°Àº °Í ¼±ÅÃ
-			for (int i = 0; i < 2; i++) {	//selected ÇÔ¼ö ÃÊ±âÈ­
+		if (a == c && b == d || array[selected[0]] != array[selected[1]]) {		//ê°™ì€ ê²ƒ ì„ íƒ
+			for (int i = 0; i < 2; i++) {	//selected í•¨ìˆ˜ ì´ˆê¸°í™”
 				selected[i] = 0;
-				life--;		//È®ÀÎ ÇÊ¿ä
 			}
+			life--;		//í™•ì¸ í•„ìš”
+			print_life(life);
 		}
 		else {
 			if (play_set(a, b, c, d, array_zo, array) == 1 || playa_set(a, b, c, d, array_zo, array) == 1 || playb_set(a, b, c, d, array_zo, array) == 1) {
@@ -159,27 +160,29 @@ int move(int* array_zo,int *x,int*y,int *correct) {
 				gotoxy(c * 9 + 11, d * 4 + 7);
 				printf("\b\b\b\b        ");
 
-				(*correct)++;	//correct 8ÀÌ µÇ¸é Á¾·áÇÒ ¿¹Á¤
+				(*correct)++;	//correct 8ì´ ë˜ë©´ ì¢…ë£Œí•  ì˜ˆì •
 			}
-			else
-				life--;		//È®ÀÎÇÊ¿ä
+			else {
+				life--;		//í™•ì¸í•„ìš”
+				print_life(life);
+			}
 		}
 	}
 	gotoxy(*x, *y);
 	setcolor(10, 0);
 	printf("%c", array[cursor]);
 
-	
+
 }
 
 void levCh(int level) {
-	if (level == 2) {	//¿µ¾î
+	if (level == 2) {	//ì˜ì–´
 		memcpy(array, L2, sizeof(L2));
 	}
-	else if (level == 3) {		//½¬¿î ±âÈ£
+	else if (level == 3) {		//ì‰¬ìš´ ê¸°í˜¸
 		memcpy(array, L3, sizeof(L3));
 	}
-	else if (level == 4) {		//¾î·Á¿î ±âÈ£
+	else if (level == 4) {		//ì–´ë ¤ìš´ ê¸°í˜¸
 		memcpy(array, L4, sizeof(L4));
 	}
 }
