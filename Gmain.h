@@ -36,7 +36,7 @@ void title() {
 int menu() {
 	setcolor(7, 0);
 	gotoxy(28, 15);
-	printf("게임시작");
+	printf("게임 시작");
 	gotoxy(28, 17);
 	printf("게임 방법");
 	gotoxy(28, 19);
@@ -117,8 +117,10 @@ void print_life(int life) {
 		printf(" ★ ");	//★
 	}
 	for (int l = 0; l < 5 - life; l++) {
-		if (5-life <= 5)
+		if (5 - life <= 5)
 			printf(" ☆ ");
+		else
+			printf("    ");
 	}
 	printf("  ]");
 }
@@ -154,33 +156,56 @@ void drawMap(int level) {
 	system("pause>NULL");
 }
 void game_clear() {
+	system("cls");
+	gotoxy(0, 0);
+	setcolor(14, 2);
+	printf("\n                   사  천  성                    \n\n");
+	setcolor(7, 0);
+	printf("                                          level : %d\n\n", level);
+
 	gotoxy(0, 7);
 	setcolor(14,0);
 	printf("==============================================================                    \n\n");
-	Sleep(10);
+	Sleep(50);
 	printf("        # # #   #         # # # #       #       # # #                                                \n");
-	Sleep(10);
+	Sleep(50);
 	printf("       #        #         #            # #      #     #                                               \n");
-	Sleep(10);
+	Sleep(50);
 	printf("      #         #         # # #       #   #     # # #                                            \n");
-	Sleep(10);                     
+	Sleep(50);                     
 	printf("       #        #         #          # # # #    #  #                                          \n");
-	Sleep(10);   
+	Sleep(50);   
 	printf("        # # #   # # # #   # # # #   #       #   #     #                                      \n");
-	Sleep(10);
+	Sleep(50);
 	setcolor(14, 0);
 	printf("\n==============================================================                              \n");
 	system("pause>NULL");
 }
 void game_over() {
-	Sleep(10);
+	system("cls");
+	gotoxy(0, 0);
+	setcolor(14, 2);
+	printf("\n                   사  천  성                    \n\n");
+	setcolor(7, 0);
+	printf("                                          level : %d\n\n", level);
+
+	Sleep(50);
 	gotoxy(0, 7);
 	setcolor(14, 0);
-	printf("==============================================================                    \n\n");
-	printf("        ###     #    #   #  ####      ##   #   #  ####  ###                                      \n");
-	printf("       # ###   ###   # # #  ###      #  #   # #   ###   ###                                   \n");
-	printf("        ####  #   #  #   #  ####      ##     #    ####  #   #                              \n");
+	printf("======================================================================                    \n\n");
+	Sleep(50);
+	Sleep(50);
+	printf("        ###      #     #     #  ####      ##    #   #  ####  ####                                      \n");
+	Sleep(50);
+	printf("       #        # #    # # # #  #        #  #   #   #  #     #   #                           \n");
+	Sleep(50);
+	printf("       #  ##   # # #   #  #  #  ###     #    #  #   #  ###   ####                                   \n");
+	Sleep(50);
+	printf("       #   #   #   #   #     #  #        #  #    # #   #     #  #                                 \n");
+	Sleep(50);
+	printf("        ####  #     #  #     #  ####      ##      #    ####  #   #                              \n");
+	Sleep(50);
 	setcolor(14, 0);
-	printf("\n==============================================================                              \n");
+	printf("\n======================================================================                              \n");
 	system("pause>NULL");
 }
