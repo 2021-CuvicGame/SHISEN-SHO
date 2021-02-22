@@ -58,7 +58,7 @@ void game_set(){
 	}
 
 	//while (1) {
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 27);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 17);
 		printf("\n                Sacheonseong Game                  \n\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 		printf("                                          level : %d\n\n", level);
@@ -109,7 +109,7 @@ void make_board(char* array) {
 		if (i % 4 == 0) {
 			gotoxy(7, i + 7);
 		}
-		printf(" |  %c  | ", array[i]);
+		printf(" [  %c  ] ", array[i]);
 	}
 }
 
@@ -126,8 +126,10 @@ void shuffle(char* arr, int num) {
 }
 
 void gotoxy(int x, int y) {
-	COORD Pos = { x - 1, y - 1 };
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
+	COORD Cur;
+	Cur.X = x;
+	Cur.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
 }
 
 void wasd(char* array, int array_zo[6][6]) {
@@ -221,25 +223,25 @@ void wasd(char* array, int array_zo[6][6]) {
 		}
 
 		//if array[] 다 공백 (32)이면 게임클리어 출력 -> 레벨 다음 -> array 말 종류가 바뀐다
-		if (correct == 8){
-			level++;
-			if (level==2){
-				array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
-			}
-			else if (level==3){
-				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
-			}
-			else if (level==4){
-				//한글
-				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
-			}
-			else if (level==4){
-				//한문
-				array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
-			}
+		//if (correct == 8){
+		//	level++;
+		//	if (level==2){
+		//		array[16] = { 'a','a','b','b','c','c','d','d','e','e','f','f','g','g','h','h' };
+		//	}
+		//	else if (level==3){
+		//		array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
+		//	}
+		//	else if (level==4){
+		//		//한글
+		//		array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
+		//	}
+		//	else if (level==4){
+		//		//한문
+		//		array[16] = { '#','#','*','*','!','!','?','?','~','~','-','-','+','+','=','=' };
+		//	}
 			//systemcls
 			game_set();
-		}
+		//}
 	}
 	
 	gotoxy(x, y);
